@@ -1,0 +1,13 @@
+Describe the Domain classes and how a Detector provides a new subclass of MpfEventData
+
+The following table presents the primary domain objects
+{table}
+Type | table_name| 
+MpfExecTgt | user account to execute within (username default is user's
+             username unless overriden with @com.appscio.mpf.targets.default.username@
+{table}
+
+The following table presents to GORM-supplied association tables
+{table}
+table_name | Purpose
+{table}

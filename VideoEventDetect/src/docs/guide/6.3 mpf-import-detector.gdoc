@@ -1,0 +1,29 @@
+This script brings an existing MpfDetector into an applications. It is useful for keeping an MpfDetector
+in a development or deployment location and then using that in one or more applications. It does this by
+finding and copying the @<detector name>MpfDetector.groovy@ file into the application's @grails-app/mpfDetectors/@
+directory, and creating the @grails-app/mpfDetectors/<detname>MpfDetector_runtime/scripts/@ directory. The
+@<detector name>MpfDetector.groovy@ file is rewritten as it is copied with the token DETECTOR_SOURCE being
+replaced by the original detector location, so that when the MpfDetector runs it will pull in the runtime
+files from that original location.
+
+The script takes one parameter, the name of the detector to import. (You can have "MpfDetector" on the
+name, or not ... it will be deleted from the command line parameter to get the simple detector name)
+If the detector already exists (that is, if the file @grails-app/mpfDetectors/<detname>MpfDetector.groovy@
+exists) then the script exits, *declining to overwrite*.
+{note}TODO maybe it would be better to move the existing <detname>MpfDetector* into a save dir?{note}
+The script looks in the "interesting" places for the named detector. So, if you do
+"@grails mpf-import-detector Foo@" the script will look for:
+ * @$MPF_DETECTORS_HOME/foo/grails/FooMpfDetector.groovy@
+ * @$APPSCIO_HOME/foo/grails/FooMpfDetector.groovy@
+ * @/usr/share/appscio/detectors/foo/grails/FooMpfDetector.groovy@
+ * @/etc/appscio/detectors/foo/grails/FooMpfDetector.groovy@
+
+ The script looks for each of those files (in that order) and copies in the first one that it finds; if there
+ are others, the script will notify you that they are *not* being imported, with a message like
+ @detector already exists in grails-app/mpfDetectors so skipping detector <detName> from <src dir>@
+
+ There is a special @ALLDETECTORS@ keyword you can use for the detector name parameter. If you do
+ @grails mpf-import-detector ALLDETECTORS@ then the script will look for in all the immediate child
+ directories of @MPF_DETECTORS+HOME@, @APPSCIO_HOME@, @/usr/share/appscio/detectors@, and @/tc/appscio/detectors@
+ for any files with names that end in @MpfDetector.groovy@ ... and then it will treat each of these as
+ an MpfDetector to be imported and rewritten (subject to the non-overwrite behavior described above)

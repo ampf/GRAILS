@@ -1,0 +1,20 @@
+After the plugin is installed, you need to create the specific MpfDetectors you want.
+Start with @grails create-mpf-detector Foo@ to create the @grails-app/mpfDetectors/FooMpfDetector.groovy@ artifact.
+
+On each MpfTask run, the plugin will create a new working directory on the execution target,
+with subdirectories containing the execution wrapper scripts customized to that job,
+the detector's own master script, and containing the 'dependencies' your detector needs
+(jar files, classes, gstreamer plugins, etc). The easiest way to get the dependencies you
+need is for you to populate the "@grails-app/mpfDetectors/FooMpfDetector_runtime/@" directory ...
+anything in that directory will be copied over to the execution target directory
+(preserving any subdirectory structure).
+You can also list specific files to move (and rename) using the @ANT_COPY_TO_SUPPORT@ properties
+in the FooDetector.groovy file. (See the comments in that file)
+The FooDetector class includes a DETECTOR_SCRIPT property you set to be the name of a script for the
+VADWrapperScript to 'source' into the target environment; this script can source other scripts if
+your detector is decomposed into scripted modules.
+The linkage from the wrapper code into your detector code is a "@*detect*@" function you supply in some script.
+You put the containing script (such as @detect.sh@') with the @detect@ function into the target environment by
+including it in the @FooMpfDetector_runtime/scripts@ dir or by copying it in using an @ANT_COPY_TO_SUPPORT@ property.
+{note}If the @*detect*@ function doesn't get found, you'll get an error status reported back. To debug
+this, you'll probably want to go look at the @JOB.LOG@ file in the remote execution directory{note}

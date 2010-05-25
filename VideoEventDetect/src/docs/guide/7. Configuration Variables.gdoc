@@ -1,0 +1,12 @@
+The MpfDetector responds to several configuration variables in the @com.appscio.mpf@ namespace.
+Set these in the Config.groovy (or other property file) used by your application.
+{table}
+Config Variable | Default | Description
+@com.appscio.mpf.targets.default.username@ | user's name | username for the default execution target
+@com.appscio.mpf.targets.default.password@ | user's name reversed | set password for the default execution target
+@com.appscio.mpf.targets.default.ip@  | @localhost@ | ip or hostname for the default execution target
+@com.appscio.session.clearTask@ | @null@ | if defined (e.g., *@true@*) the MpfDetectorService will process an incoming MpfReport (adding any extracted MpfEvents to some MpfTask) then will eject the selected MpfTask from the Hibernate session. This reduces memory footprint at probable cost of performance.
+@com.appscio.mpf.session.lockTask@ | false | if true, attempt to use pessimistic locking on MpfTasks (NOT WITH HSQLDB)
+@com.appscio.mpf.targets.sshexec.timeoutms@ | 10000 | timeout for when using sshexec to communicate with execTgt
+@com.appscio.mpf.targets.monitorSec@ | 0 | if set to non-zero, then create mpfExecTgtStats at that interval |
+{table}

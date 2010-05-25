@@ -1,0 +1,21 @@
+APPSCIO MPF GRAILS APPLICATIONS
+-------------------------------
+
+VideoEventDetect
+----------------
+
+Grails plugin grails-mpf-detector; uses MPF to detect events in video and store 
+event metadata.
+
+
+LDE
+---
+
+Large Data Evaluator Grails application; uses grails-mpf-detector to run event
+detection tasks, then presents the results for analysis.
+
+
+REVISION HISTORY
+----------------
+
+05/25/10 Initial version - Gareth Bowles (gbowles@appscio.com) 

@@ -1,0 +1,40 @@
+APPSCIO LARGE DATA EVALUATOR v1.0
+---------------------------------
+
+(c) Appscio, Inc. 2010
+
+The Large Data Evaluator is a web application that allows you to view performance data
+from Appscio's MPF event detectors and run new detector tasks.
+
+To run the application with a sample database containing analysis data from tests run
+by Appscio, simply type:
+
+./start
+
+from this directory.  The LDE URL defaults to:
+
+http://localhost:28080/LDE
+
+The port number and other parameters may be overridden; see the comments in the
+start script for details.
+
+To view analysis details comparing multiple Appscio detectors against a set of test
+UAV videos, click the Analysis button.
+
+To view a list of the event detection tasks, click the List Tasks button and 
+specify the task details:
+
+1. Name the MpfTask (any name you like)
+2. Select the MppMpfDetector from the Detector drop-down
+3. Identify the detection you want to do, by entering into the 'Detector prefix'' one of the following:
+       detector=detect-md.sh (this is the default if Detector Prefix is left blank), or
+       detector=detect-usc.sh or
+       detector=detect-md-usc.sh
+4. Put the video URL into the ''Video File Url'' field
+5. Change the Timeout; the required time varies with the video, the detector, and your hardware
+6. Click on Create to submit the job (it will run immediately)
+7. Check the List Tasks view periodically to see how the task is doing (it should be in RUNNING status,
+   then transition into SUCCEEDED or FAILED); at any time, check the Analysis view to get measurements 
+   on any completed evaluations. 
+
+Please contact mpf-support@appscio.com for further information.

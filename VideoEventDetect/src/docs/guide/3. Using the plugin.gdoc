@@ -1,0 +1,86 @@
+h2. Detector runtime location(s)
+* @MPF_DETECTORS_HOME/Foo@ (if, and only if, MPF_DETECTORS_HOME is defined)
+* @MPF_DETECTORS_HOME@ (if, and only if, MPF_DETECTORS_HOME is defined)
+* @APPSCIO_HOME/Foo@ (if, and only if, APPSCIO_HOME is defined)
+* @APPSCIO_HOME@ (if, and only if, APPSCIO_HOME is defined)
+* @/usr/share/appscio/detectors/Foo@
+* @/etc/appscio/detectors/Foo@
+
+{note} Should change this to @APPSCIO_HOME/detectors/Foo@{note}
+
+h2. Detector runtime data flow
+This section runs through how the mythical @FooMpfDetector@ operates.
+When an MpfTask instance is activated for execution, the @MpfDetectorGrailsPlugin@ (aka "the plugin")
+creates an instance of the @FooMpfDetector@ class; we'll call that instance "the MpfDetector"
+The plugin then uses the ANT_COPY_TO_SUPPORT and other fields of the MpfDetector to
+assemble the libraries and scripts defined by the MpfDetector into an execution environment,
+rewrites the Run_FooMpfDetector.sh script (to embed the specific settings for this execution
+of the @MpfTask@).
+
+The plugin pushes the execution environemt over to a "job directory" on the ExecTgt, then
+invokes the script identified by the MpfDetector (it's the @DETECTOR_SCRIPT@ variable,
+usually a script named '@detect.sh@') . The job directory is directly under the ExecTgt's root
+directory ... the name of the job directorys has '@vad_@' as a prefix, then the MpfDetctor name,
+then a random/unique per-run suffix. For example, if the ExecTgt is user 'mpf1' on host
+'localhost' then a run of the job be:
+
+  @/home/mpf1/vad_FooMpfDetctor_1234567890@
+
+The invocation is done in a '@screen@' session so you can connect to it later if you want; the invocation sequence is:
+
+@cd /home/mpf1/vad_FooMpfDetctor_1234567890/VadScripts ;@
+@chmod +x Run_FooMpfDetector.sh ;@
+@screen -S vad_FooMpfDetctor_1234567890 -t vad_FooMpfDetctor_1234567890 -dm ./Run_FooMpfDetector.sh@
+
+The Run_FooMpfDetector.sh script has been rewritten according to the specifics of the task, so
+the '@detector prefix@' variable are available along with all the other per-MpfTask variables
+such as use_gpu, timout, etc. The variable are shown in the table below:
+
+{table}
+VARIABLE | DESCRIPTION
+@statusEndpoint@ | url to send status
+@eventEndpoint@ | url to post event reports
+@video@ | file location of the source media
+@timeout@ | timeout value in bash 'wait' form (1m 10s etc)
+@use_gpu@ | will be one of '@if_avail@','@required@', '@do_not_use@' (is avail to '@detect@' but not enforced by Run_FooMpfDetector.sh)
+@detector_script@ | file to source (usually '@detect.sh@'
+@mpf_reporting_pw@ | user password to use for credentials when reporting to plugin/host app
+@mpf_reporting_user@ | user name to use for credentials when reporting to plugin/host app
+@mpf_task_name@ | name assigned by plugin (e.g., vad_FooMpfDetector_1234567890)
+@host_log@ | if defined, copy mpf_log message to the plugin host app
+@host_out@ | if defined, copy @detect@' '@stdout@' to the plugin host app
+@host_err@ | if defined, copy @detect@' '@stderr@' to the plugin host app
+{table}
+
+Run_FooMpfDetect.sh sources the '@detect.sh@' file. The '@detect.sh@' can source other files,
+establish aliases, and so forth - do anything you want done before the main entry point is invoked.
+
+After the sourcing is done, Run_FooMpfDetector.sh invokes a single no-parameter entry point, '@detect@'
+This function (usually provided in the '@detect.sh@' file) does the actual detection work.
+
+The '@detect@' function invocation is prefixed with the detector prefix string from the MpfTask UI,
+and wrapped in a timeout monitor based on the @timeout@ variable.
+
+The '@detect@' function returns events and status to the plugin using some of the functions from
+'@MpfSupportFunctions.sh@' - the detector-useful functions are:
+
+{table}
+FUNCTION | POSITIONAL PARAMS
+@mpf_sendStatus@ | $1 - the string form of one of the MpfTaskStatus; $2 - optional, message string
+@mpf_sendEvent@ | $1 - string to post back as an event
+@mpf_sendEventXMLFile@ | $1 - local file to post back as XML doc
+@mpf_log@ | $1 - log message
+{table}
+
+When a message is posted back the string form (either the raw string or the string output of the XML document)
+is captured by the plugin as an MpfReport, and this is passed into the MpfDetector instance's @parseReport@
+closure.
+
+This closure has to parse the report into instances of @MpfEventData@ subclasses. Exactly which subclass,
+is up to the MpfDetector. There are some @MpfEventData@ subclasses presently supplied by the plugin (pending
+development of a detector plugin model), or the hosting application can supply new domain objects of
+the desired subclass (following the examples in the plugin, for example see
+@com.appscio.mpf.grails.cot.CotMpfEventData.groovy@)
+
+The @parseReport@ closure returns the list of @MpfEventData@ instances, which the plugin persists and
+links to appropriate @MpfEvent@ instances in the data store.

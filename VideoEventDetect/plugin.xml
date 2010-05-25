@@ -1,0 +1,48 @@
+<plugin name='mpf-detector' version='0.4' grailsVersion='1.2.0 &gt; *'>
+  <author>Wayne Stidolph</author>
+  <authorEmail>wstidolph@appscio.com</authorEmail>
+  <title>Integration with Appscio MPF</title>
+  <description>\
+This plugin provides integration with Appscio MPF pipelines for event detection. It features a service for running pipelines, and domain objects for tracking status and events
+</description>
+  <documentation>http://appscio.com/catalog/MpfDetector+Plugin</documentation>
+  <resources>
+    <resource>Config</resource>
+    <resource>DataSource</resource>
+    <resource>UrlMappings</resource>
+    <resource>spring.resources</resource>
+    <resource>com.appscio.mpf.grails.core.MpfEventController</resource>
+    <resource>com.appscio.mpf.grails.core.MpfEventDataController</resource>
+    <resource>com.appscio.mpf.grails.core.MpfExecTgtController</resource>
+    <resource>com.appscio.mpf.grails.core.MpfReportController</resource>
+    <resource>com.appscio.mpf.grails.core.MpfTaskController</resource>
+    <resource>com.appscio.mpf.grails.core.MpfTaskStatsController</resource>
+    <resource>com.appscio.mpf.grails.cot.CotMpfEventDataController</resource>
+    <resource>com.appscio.mpf.grails.core.MpfCapability</resource>
+    <resource>com.appscio.mpf.grails.core.MpfEvent</resource>
+    <resource>com.appscio.mpf.grails.core.MpfEventData</resource>
+    <resource>com.appscio.mpf.grails.core.MpfEventStreamData</resource>
+    <resource>com.appscio.mpf.grails.core.MpfExecTgt</resource>
+    <resource>com.appscio.mpf.grails.core.MpfReport</resource>
+    <resource>com.appscio.mpf.grails.core.MpfTask</resource>
+    <resource>com.appscio.mpf.grails.core.MpfTaskStats</resource>
+    <resource>com.appscio.mpf.grails.core.SimpleMpfEventData</resource>
+    <resource>com.appscio.mpf.grails.cot.CotMpfEventData</resource>
+    <resource>com.appscio.mpf.grails.cot.MpfCotDetail</resource>
+    <resource>com.appscio.mpf.grails.core.MpfDetectorService</resource>
+    <resource>com.appscio.mpf.grails.event.MpfEventManagerService</resource>
+    <resource>com.appscio.mpf.grails.eventstore.MpfEventStoreService</resource>
+    <resource>com.appscio.mpf.grails.initialization.MpfInitializationService</resource>
+    <resource>com.appscio.mpf.grails.report.MpfReportManagerService</resource>
+    <resource>com.appscio.mpf.grails.target.MpfTargetManagerService</resource>
+    <resource>com.appscio.mpf.grails.task.MpfTaskManagerService</resource>
+    <resource>com.appscio.mpf.grails.core.MpfTagLib</resource>
+  </resources>
+  <dependencies>
+    <plugin name='backgroundThread' version='* &gt; 1.6' />
+    <resolvers>
+      <resolver type='grailsPlugins' name='grailsPlugins' />
+    </resolvers>
+  </dependencies>
+  <behavior />
+</plugin>

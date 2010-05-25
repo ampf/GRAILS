@@ -1,0 +1,63 @@
+<project name="lde" default="runtime">
+
+    <!-- version is e.g. 1.0.3 -->
+	<loadfile srcFile="version" property="version"/>
+
+    <property name="product" value="lde"/>
+    <property name="MPF" location="../MPF"/>
+    <property name="GRDF" location="../grdf"/>
+    <property name="NRL_MPF" location="../NRL-MPF"/>
+    <property name="SC_MPF" location="../SC-MPF"/>
+    <property name="USR_LIB" location="/usr/lib64"/>
+    <property name="VED" location="../VideoEventDetect"/>
+    <property name="distdir" value="${basedir}/grails-app/mpfDetectors"/>
+	<property name="dist" value="${distdir}"/>
+    <property name="runtime" value="${dist}/MppMpfDetector_runtime"/>
+	<property name="scripts" value="${runtime}/scripts"/>
+    <property name="rpmdir" value="/usr/src/rpm"/>
+    <property name="zipfile" value="${basedir}/../LDE-trunk.zip"/>
+    <property name="reposerver" value="packages.appscio.com"/>
+    <property name="repouser" value="root"/>
+    <property name="zipdir" value="/vol/www/repo-customer_nrl_01/grails-plugins"/>
+    <property name="dist-zipdir" value="${repouser}@${reposerver}:${zipdir}"/>
+    <property name="sshkey" value="/home/build/ec2-keys/id_rsa-org-keypair"/>
+
+    <loadfile srcFile="${SC_MPF}/version" property="sc_mpf_version"/>
+    <property name="sc_mpf_dist" value="${SC_MPF}/dist/appscio-sc-mpf-${sc_mpf_version}"/>
+
+	<target name="runtime" description="Build runtime">
+
+		<!-- Copy the SC-MPF distribution -->
+        <mkdir dir="${runtime}" />
+        <copy todir="${runtime}" flatten="false">
+            <fileset dir="${sc_mpf_dist}/runtime" includes="**" excludes="**/grails/**"/>
+        </copy>
+
+        <copy todir="${dist}">
+            <fileset dir="${sc_mpf_dist}/grails" includes="MppMpfDetector.groovy"/>
+            <fileset dir="${VED}/scripts" includes="*.sh"/>
+        </copy>
+
+        <chmod dir="${scripts}" perm="a+x" includes="test-*" />
+
+	</target>
+
+    <target name="runtime-clean" description="Clean runtime">
+        <delete dir="${runtime}" />
+    	<delete file="${dist}/MppMpfDetector.groovy"/>
+    	<delete dir="${dist}" includes="*.sh"/>
+    </target>
+
+    <!-- Build the LDE ZIP file on Fedora -->
+    <!-- NOTE - assumes that VideoEventDetect source has been checked out to ./support/VideoEventDetect -->
+    <target name="build-zip" depends="runtime">
+        <replace file="${basedir}/grails-app/conf/BuildConfig.groovy" token="../VideoEventDetect" value="./support/VideoEventDetect" />
+        <delete file="${zipfile}" />
+        <zip destfile="${zipfile}" basedir="${basedir}/../" includes="LDE/**" excludes="**/.svn/**" update="true" />
+    </target>
+
+    <!-- Distribute the LDE ZIP file to the Appscio repository -->
+    <target name="dist-zip">
+        <scp file="${zipfile}" todir="${dist-zipdir}" keyfile="${sshkey}" passphrase="" verbose="true" />
+    </target>
+</project>

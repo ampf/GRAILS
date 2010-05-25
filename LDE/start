@@ -1,0 +1,25 @@
+#!/bin/sh
+
+# Unhide the following lines and set to a user-local directory if encountering access collisions on tempory files
+#
+# tmpdir=${tmp:=$HOME/tmp}
+# mkdir -p $tmpdir
+# tmpdirstr="-Djava.io.tmpdir=${tmpdir}"
+
+port=${port:=28080}
+env=${env:=prod}
+db=${db:=local}
+
+# Note: set MPF_DETECTORS_HOME to the directory containing the RunMpfDetector.sh and MpfSupportFunctions.sh
+# scripts.  The default is to use the grails-app/mpfDetectors under this location.
+#
+# Also: appscio.db can be used to switch between databases.  The allowed values are "local", "percival", and
+# "gpubox".  Inspect grails-app/conf/DataSource.groovy to see how this switch occurs.  "percival" and
+# "gpubox" are Appcio test machines, you should modify them to match those in your infrastructure.
+#
+# Also: the runtime port, Grails runtime environment, and database can be controlled from outside this script
+# by setting port, env, and db as follows:
+#
+# port=1234 env=dev db=percival ./start
+
+MPF_DETECTORS_HOME=grails-app/mpfDetectors grails -Dgrails.server.port.http=$port "${tmpdirstr}" -Dappscio.db=$db $env run-app

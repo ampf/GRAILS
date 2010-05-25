@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/java"/>
+	<classpathentry kind="src" path="src/groovy"/>
+	<classpathentry kind="src" path="grails-app/conf"/>
+	<classpathentry kind="src" path="grails-app/controllers"/>
+	<classpathentry kind="src" path="grails-app/domain"/>
+	<classpathentry kind="src" path="grails-app/services"/>
+	<classpathentry kind="src" path="grails-app/taglib"/>
+	<classpathentry kind="src" path="test/integration"/>
+	<classpathentry kind="src" path="test/unit"/>
+	<classpathentry kind="src" path="test/projects/MpfDetectorPluginTestbed/test/unit"/>
+	<classpathentry kind="src" path="test/projects/MpfDetectorPluginTestbed/test/integration"/>
+	<classpathentry excluding="tests/functional/" kind="src" path="test/projects/MpfDetectorPluginTestbed/test/functional"/>
+	<classpathentry kind="src" path="test/projects/MpfDetectorPluginTestbed/src/java"/>
+	<classpathentry kind="src" path="test/projects/MpfDetectorPluginTestbed/grails-app/controllers"/>
+	<classpathentry kind="src" path="test/projects/MpfDetectorPluginTestbed/grails-app/domain"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="GROOVY_SUPPORT"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/g_1.2.1"/>
+	<classpathentry kind="output" path="web-app/WEB-INF/classes"/>
+</classpath>
