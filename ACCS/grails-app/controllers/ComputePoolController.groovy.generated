@@ -1,0 +1,99 @@
+
+
+class ComputePoolController {
+    
+    def index = { redirect(action:list,params:params) }
+
+    // the delete, save and update actions only accept POST requests
+    static allowedMethods = [delete:'POST', save:'POST', update:'POST']
+
+    def list = {
+        params.max = Math.min( params.max ? params.max.toInteger() : 10,  100)
+        [ computePoolInstanceList: ComputePool.list( params ), computePoolInstanceTotal: ComputePool.count() ]
+    }
+
+    def show = {
+        def computePoolInstance = ComputePool.get( params.id )
+
+        if(!computePoolInstance) {
+            flash.message = "ComputePool not found with id ${params.id}"
+            redirect(action:list)
+        }
+        else { return [ computePoolInstance : computePoolInstance ] }
+    }
+
+    def delete = {
+        def computePoolInstance = ComputePool.get( params.id )
+        if(computePoolInstance) {
+            try {
+                computePoolInstance.delete(flush:true)
+                flash.message = "ComputePool ${params.id} deleted"
+                redirect(action:list)
+            }
+            catch(org.springframework.dao.DataIntegrityViolationException e) {
+                flash.message = "ComputePool ${params.id} could not be deleted"
+                redirect(action:show,id:params.id)
+            }
+        }
+        else {
+            flash.message = "ComputePool not found with id ${params.id}"
+            redirect(action:list)
+        }
+    }
+
+    def edit = {
+        def computePoolInstance = ComputePool.get( params.id )
+
+        if(!computePoolInstance) {
+            flash.message = "ComputePool not found with id ${params.id}"
+            redirect(action:list)
+        }
+        else {
+            return [ computePoolInstance : computePoolInstance ]
+        }
+    }
+
+    def update = {
+        def computePoolInstance = ComputePool.get( params.id )
+        if(computePoolInstance) {
+            if(params.version) {
+                def version = params.version.toLong()
+                if(computePoolInstance.version > version) {
+                    
+                    computePoolInstance.errors.rejectValue("version", "computePool.optimistic.locking.failure", "Another user has updated this ComputePool while you were editing.")
+                    render(view:'edit',model:[computePoolInstance:computePoolInstance])
+                    return
+                }
+            }
+            computePoolInstance.properties = params
+            if(!computePoolInstance.hasErrors() && computePoolInstance.save()) {
+                flash.message = "ComputePool ${params.id} updated"
+                redirect(action:show,id:computePoolInstance.id)
+            }
+            else {
+                render(view:'edit',model:[computePoolInstance:computePoolInstance])
+            }
+        }
+        else {
+            flash.message = "ComputePool not found with id ${params.id}"
+            redirect(action:list)
+        }
+    }
+
+    def create = {
+        def computePoolInstance = new ComputePool()
+        computePoolInstance.properties = params
+        return ['computePoolInstance':computePoolInstance]
+    }
+
+    def save = {
+        def computePoolInstance = new ComputePool(params)
+        if(!computePoolInstance.hasErrors() && computePoolInstance.save()) {
+            flash.message = "ComputePool ${computePoolInstance.id} created"
+            redirect(action:show,id:computePoolInstance.id)
+        }
+        else {
+            render(view:'create',model:[computePoolInstance:computePoolInstance])
+        }
+    }
+}

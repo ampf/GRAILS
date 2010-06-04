@@ -1,0 +1,14 @@
+#!/bin/sh
+
+port=${port:=48080}
+env=${env:=development}
+grails_home=${grails_home:=/usr/share/grails/grails-1.1.1}
+java_home=${java_home:=$JAVA_HOME}
+logdir=${logdir:=.}
+
+# The runtime port, Grails runtime environment, and database can be controlled from outside this script
+# by setting port, env, and db as follows:
+#
+# port=1234 env=dev db=percival ./start
+
+mvn -Dcom.appscio.acce.logdir=$logdir -Dserver.port=$port -Dgrails.env=$env grails:run-app

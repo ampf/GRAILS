@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.appscio.contrails</groupId>
+  <artifactId>computeCloud</artifactId>
+  <name>Management for Amazon sttEngine instances</name>
+  <packaging>war</packaging>
+  <version>0.1-SNAPSHOT</version>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.grails</groupId>
+      <artifactId>grails-crud</artifactId>
+      <version>1.1.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.grails</groupId>
+      <artifactId>grails-gorm</artifactId>
+      <version>1.1.1</version>
+    </dependency>
+
+    <!-- Amazon EC2 & SQS -->
+    <dependency>
+      <groupId>com.amazonaws</groupId>
+      <artifactId>amazon-ec2</artifactId>
+      <version>2009-04-04</version>
+    </dependency>
+    <dependency>
+      <groupId>com.amazonaws</groupId>
+      <artifactId>amazon-queue</artifactId>
+      <version>2009-04-14</version>
+    </dependency>
+
+    <!-- Grails defaults to OSCache for the second-level Hibernate cache. -->
+    <dependency>
+      <groupId>opensymphony</groupId>
+      <artifactId>oscache</artifactId>
+      <version>2.4</version>
+      <exclusions>
+        <exclusion>
+          <groupId>commons-logging</groupId>
+          <artifactId>commons-logging</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>javax.jms</groupId>
+          <artifactId>jms</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>javax.servlet</groupId>
+          <artifactId>servlet-api</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <!-- For ease of development and testing, we include the HSQLDB database. -->
+    <dependency>
+      <groupId>hsqldb</groupId>
+      <artifactId>hsqldb</artifactId>
+      <version>1.8.0.5</version>
+    </dependency>
+
+    <!-- Use Log4J for logging. This artifact also pulls in the Log4J JAR. -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-log4j12</artifactId>
+      <version>1.5.5</version>
+      <scope>runtime</scope>
+    </dependency>
+    <!-- Use log4j 1.2.15 to support application property in SocketAppender for
+         central logging -->
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.15</version>
+      <scope>runtime</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>javax.mail</groupId>
+          <artifactId>mail</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>javax.jms</groupId>
+          <artifactId>jms</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.sun.jdmk</groupId>
+          <artifactId>jmxtools</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.sun.jmx</groupId>
+          <artifactId>jmxri</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>jstl</artifactId>
+      <version>1.2</version>
+    </dependency>
+    <dependency>
+      <groupId>org.tmatesoft.svnkit</groupId>
+      <artifactId>svnkit</artifactId>
+      <version>1.2.3.5521</version>
+      <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
+        <groupId>org.grails</groupId>
+        <artifactId>grails-test</artifactId>
+        <version>1.1.1</version>
+        <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.grails</groupId>
+      <artifactId>grails</artifactId>
+      <version>1.1.1</version>
+      <type>pom</type>
+    </dependency>
+  </dependencies>
+
+  <repositories>
+    <!-- Required to get hold of JTA -->
+    <repository>
+      <id>maven2-repository.dev.java.net</id>
+      <name>Java.net Repository for Maven</name>
+      <url>http://download.java.net/maven/2/</url>
+      <layout>default</layout>
+    </repository>
+    <repository>
+      <id>Codehaus Snapshots</id>
+      <url>http://snapshots.repository.codehaus.org</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+    </repository>
+  </repositories>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <id>Codehaus Snapshots</id>
+      <url>http://snapshots.repository.codehaus.org</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+    </pluginRepository>
+  </pluginRepositories>
+
+  <build>
+    <pluginManagement />
+    <plugins>
+      <plugin>
+        <groupId>org.grails</groupId>
+        <artifactId>grails-maven-plugin</artifactId>
+        <version>1.1-SNAPSHOT</version>
+        <extensions>true</extensions>
+        <executions>
+          <execution>
+            <goals>
+              <goal>init</goal>
+              <goal>maven-clean</goal>
+              <goal>validate</goal>
+              <goal>config-directories</goal>
+              <goal>maven-compile</goal>
+              <goal>maven-test</goal>
+              <goal>maven-war</goal>
+              <goal>maven-functional-test</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.5</source>
+          <target>1.5</target>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  <profiles>
+    <profile>
+      <id>tools</id>
+      <activation>
+        <property>
+          <name>java.vendor</name>
+          <value>Sun Microsystems Inc.</value>
+        </property>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>com.sun</groupId>
+          <artifactId>tools</artifactId>
+          <version>${java.version}</version>
+          <scope>system</scope>
+          <systemPath>${java.home}/../lib/tools.jar</systemPath>
+        </dependency>
+      </dependencies>
+    </profile>
+  </profiles>
+</project>
